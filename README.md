@@ -2,6 +2,17 @@
 
 
 ## Folder Structure
+- **Datasets**:
+  - Contains various datasets used in the project for training, testing, and evaluation of models.
+  - Example files:
+    - **APT_segments.csv**: Contains segmented audio data with extracted features for emotion recognition.
+    - **dynamic_segments.csv**: Includes dynamic audio segments for analysis and feature extraction.
+    - **audio_features_25_soxrHQ_44_all_stacked_189.csv**: Stacked audio features extracted using high-quality resampling methods.
+    - **recognized_APT_segments.csv**: Contains recognized emotion profiles based on extracted features.
+    - **music_genres_result_svm.csv**, **music_genres_result_rf.csv**, **music_genres_result_dt.csv**: Results from different models (SVM, Random Forest, Decision Tree) applied to classify music genres and emotion profiles.
+    - **songofruth_segments.csv**: Segmented audio data from the "Song of Ruth" dataset for feature extraction and modeling.
+  - These datasets are essential for training and evaluating the machine learning models used in the project.
+  
 - **Preprocessing_Scripts**: 
   - Contains scripts for cleaning and preparing the raw audio data.
   - Tasks include loading audio files, trimming silence, segmenting audio into smaller chunks, and encoding labels.
