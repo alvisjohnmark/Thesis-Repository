@@ -2,6 +2,31 @@ import pandas as pd
 import numpy as np
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.model_selection import KFold, cross_val_score
+from scipy.stats import zscore
+
+df = pd.read_csv('/feature_extraction_output.csv')
+
+def replace_outliers_with_mean_zscore(df, threshold=3):
+    df_cleaned = df.copy()
+
+    for col in df_cleaned.columns:
+        # Calculate Z-scores
+        z_scores = np.abs(zscore(df_cleaned[col]))
+
+        # Identify outliers
+        outliers = z_scores > threshold
+
+        # Calculate mean without outliers
+        mean_value = df_cleaned.loc[~outliers, col].mean()
+
+        # Replace outliers with mean
+        df_cleaned.loc[outliers, col] = mean_value
+
+    return df_cleaned
+
+# Apply function
+df_cleaned = replace_outliers_with_mean_zscore(df)
+# print(df_cleaned.shape)
 
 # Evaluate models
 def evaluate_model(model, X_test, y_test):
@@ -13,6 +38,32 @@ def evaluate_model(model, X_test, y_test):
     print("\nClassification Report:")
     print(classification_report(y_test, preds))
     return acc
+
+X = df_cleaned.rename(columns=lambda col: col.rsplit('_', 1)[0])
+X = X.iloc[:, :-1].groupby(axis=1, level=0).mean()
+y = df.iloc[:, -1].astype(int)
+
+
+best_features = ['Chroma', 'MFCC', 'Spectral Contrast', 'Spectral Flatness', 'ZCR']
+
+
+X = X[best_features]
+
+scaler = StandardScaler()
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+# X_train = replace_outliers_with_mean_zscore(X_train)
+# X_test = replace_outliers_with_mean_zscore(X_test)
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+svm_model = SVC(kernel="rbf", C=10, gamma="scale", random_state=42)
+svm_model.fit(X_train, y_train)
+svm_preds = svm_model.predict(X_test)
+svm_acc = accuracy_score(y_test, svm_preds)
+print(f"SVM Accuracy: {svm_acc:.2f}")
 
 # Evaluate SVM
 print("SVM Performance:")
@@ -26,41 +77,12 @@ rf_acc = evaluate_model(rf_model, X_test, y_test)
 print("Decision Tree Performance:")
 dt_acc = evaluate_model(dt_model, X_test, y_test)
 
-# Evaluate Naive Bayes
-print("Naive Bayes Performance:")
-nb_acc = evaluate_model(nb_model, X_test, y_test)
-
-# Cross-validation
-def cross_validate_model(model, X, y, num_folds=10):
-    kf = KFold(n_splits=num_folds, shuffle=True, random_state=42)
-    results = cross_val_score(model, X, y, cv=kf)
-    print("Cross-Validation Results:")
-    for i, result in enumerate(results, 1):
-        print(f"  Fold {i}: {result * 100:.2f}%")
-    print(f"Mean Accuracy: {results.mean() * 100:.2f}%")
-
-# Cross-validation for SVM
-print("\nSVM Cross-Validation:")
-cross_validate_model(svm_model, X_train, y_train)
-
-# Cross-validation for Random Forest
-print("\nRandom Forest Cross-Validation:")
-cross_validate_model(rf_model, X_train, y_train)
-
-# Cross-validation for Decision Tree
-print("\nDecision Tree Cross-Validation:")
-cross_validate_model(dt_model, X_train, y_train)
-
-# Cross-validation for Naive Bayes
-print("\nNaive Bayes Cross-Validation:")
-cross_validate_model(nb_model, X_train, y_train)
 
 # Compare model accuracies
 model_accuracies = {
     "SVM": svm_acc,
     "Random Forest": rf_acc,
     "Decision Tree": dt_acc,
-    "Naive Bayes": nb_acc
 }
 
 print("\nModel Accuracy Comparison:")
