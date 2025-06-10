@@ -11,8 +11,8 @@ import itertools
 import time
 
 # Load datasets
-df_train = pd.read_csv('/content/drive/MyDrive/thesis/train_feature_dominant_75.csv')
-df_test = pd.read_csv('/content/drive/MyDrive/thesis/test_feature.csv')
+df_train = pd.read_csv('/train_feature_dominant_75.csv')
+df_test = pd.read_csv('/test_feature.csv')
 
 # Preprocess datasets
 def preprocess_data(df):
