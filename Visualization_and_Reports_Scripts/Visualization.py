@@ -2,8 +2,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # Accuracy comparison across models
-models = ["SVM", "Random Forest", "Decision Tree", "Naive Bayes"]
-accuracies = [svm_acc, rf_acc, dt_acc, nb_acc]
+models = ["SVM", "Random Forest", "Decision Tree"]
+accuracies = [svm_acc, rf_acc, dt_acc]
 
 plt.figure(figsize=(8, 5))
 plt.barh(models, accuracies, color=["blue", "green", "red", "orange"], height=0.6)
