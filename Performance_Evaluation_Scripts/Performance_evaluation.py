@@ -9,7 +9,7 @@ from sklearn.svm import SVC
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 
-df = pd.read_csv('/feature_extraction_output.csv')
+df = pd.read_csv('/audio_features_25_soxrHQ_44_all_stacked_189.csv')
 
 def replace_outliers_with_mean_zscore(df, threshold=3):
     df_cleaned = df.copy()

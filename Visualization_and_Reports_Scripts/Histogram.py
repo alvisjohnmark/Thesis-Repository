@@ -1,3 +1,12 @@
+import librosa
+import pandas as pd
+from scipy.stats import skew
+
+data_path = "../audio_features_25_soxrHQ_44_all_stacked_189.csv"
+
+data = pd.read_csv(data_path)
+df = pd.DataFrame(data)
+
 happy = df[df['label'] == 0].iloc[0]['path']
 angry = df[df['label'] == 1].iloc[0]['path']
 sad = df[df['label'] == 2].iloc[0]['path']
@@ -11,7 +20,6 @@ y3, sr = librosa.load(sad, res_type='soxr_lq',duration=25 ,sr=22050 * 2 ,offset=
 
 y4, sr = librosa.load(calm, res_type='soxr_lq',duration=25 ,sr=22050 * 2 ,offset=3)
 
-from scipy.stats import skew
 
 # Generate left-skewed data (beta distribution with alpha > beta)
 left_skewed_data = np.exp(-data)  # Exponential flip
@@ -28,6 +36,8 @@ plt.show()
 import numpy as np
 import matplotlib.pyplot as plt
 import math # Importing math module
+
+rms1, sr = librosa.load("../audio/A001.mp3", res_type='soxr_lq',duration=1 ,sr=22050 ,offset=5)
 
 rms_values = rms1[0]
 
