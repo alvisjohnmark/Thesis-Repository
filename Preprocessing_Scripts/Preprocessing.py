@@ -5,13 +5,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import LabelEncoder
 
-# Mount Google Drive
-from google.colab import drive
-drive.mount('/content/drive/', force_remount=True)
-
 # Paths
-path_audio = '/content/drive/MyDrive/thesis/audio/'
-data_path = '/content/drive/MyDrive/thesis/audio_dataset.csv'
+path_audio = '/audio/'
+data_path = '/audio_dataset.csv'
 
 # Load dataset
 data = pd.read_csv(data_path)
@@ -62,7 +58,7 @@ def segment_audio(audio, sr, seconds, overlap):
     return segments
 
 def getSegments():
-    path_audio_full = '/content/drive/MyDrive/thesis/audio/songofruth.mp3'
+    path_audio_full = '/audio/songofruth.mp3'
     y, sr = librosa.load(path_audio_full, sr=22050 * 2)
     y, _ = librosa.effects.trim(y)
     return segment_audio(y, sr, seconds=5, overlap=2)
